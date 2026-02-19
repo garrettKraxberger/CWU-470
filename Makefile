@@ -1,23 +1,21 @@
+# Makefile for myshell
+
 CC = gcc
-CFLAGS = -Wall -Wextra -O2
-TARGET = hello
-SRCS = Hello.c
+CFLAGS = -Wall -Wextra -std=c99
+TARGET = myshell
+SRC = myshell.c
+TEST_SCRIPT = run_tests.sh
 
-.PHONY: all clean run lab2 run-lab2
+all: $(TARGET)
 
-all: $(TARGET) lab2
-
-$(TARGET): $(SRCS)
-	$(CC) $(CFLAGS) -o $(TARGET) $(SRCS)
-
-lab2: Lab2.c
-	$(CC) $(CFLAGS) -o lab2 Lab2.c
-
-run: all
-	./$(TARGET)
-
-run-lab2: lab2
-	./lab2
+$(TARGET): $(SRC)
+	$(CC) $(CFLAGS) -o $(TARGET) $(SRC)
 
 clean:
-	rm -f $(TARGET) lab2 *.o source_folder/* destin_folder/*
+	rm -f $(TARGET)
+
+test: $(TARGET)
+	bash ./$(TEST_SCRIPT)
+
+.PHONY: all clean test
+
