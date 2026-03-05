@@ -1,40 +1,49 @@
-# ============================================================
-# Makefile – CPU Scheduling Simulator (SJF & Round Robin)
-#
-# Targets:
-#   make        – build both executables
-#   make sjf    – build SJF only
-#   make rr     – build RR only
-#   make run    – build and run both simulators
-#   make clean  – remove executables
-# ============================================================
+# ─────────────────────────────────────────────────────────────────
+# Makefile – libFS Test Application
+# Author : Garrett
+# Target : Garrett_testFS  (linked with Claude_libFS)
+# ─────────────────────────────────────────────────────────────────
 
 CC      = gcc
-CFLAGS  = -Wall -Wextra -std=c11 -g
+CFLAGS  = -Wall -Wextra -Wpedantic -std=c11 -g
+TARGET  = Garrett_testFS
 
-.PHONY: all run clean
+# Source & object files
+SRCS    = Garrett_libFS.c Garrett_testFS.c
+OBJS    = $(SRCS:.c=.o)
 
-# Default target: build both
-all: sjf rr
+# ── Default target ──────────────────────────────────────────────
+.PHONY: all
+all: $(TARGET)
+	@echo ""
+	@echo "  Build complete → ./$(TARGET)"
+	@echo "  Run with:  ./$(TARGET)"
+	@echo ""
 
-# Build SJF executable
-sjf: sjf.c
-	$(CC) $(CFLAGS) -o sjf sjf.c
-	@echo "Built: sjf"
+# ── Link ────────────────────────────────────────────────────────
+$(TARGET): $(OBJS)
+	$(CC) $(CFLAGS) -o $@ $^
 
-# Build Round Robin executable
-rr: rr.c
-	$(CC) $(CFLAGS) -o rr rr.c
-	@echo "Built: rr"
+# ── Compile ─────────────────────────────────────────────────────
+%.o: %.c Garrett_libFS.h
+	$(CC) $(CFLAGS) -c -o $@ $<
 
-# Build and run both
+# ── Run convenience target ──────────────────────────────────────
+.PHONY: run
 run: all
-	@echo "\n--- Running SJF ---"
-	./sjf
-	@echo "\n--- Running Round Robin ---"
-	./rr
+	./$(TARGET)
 
-# Remove compiled binaries
+# ── Clean ───────────────────────────────────────────────────────
+.PHONY: clean
 clean:
-	rm -f sjf rr
-	@echo "Cleaned up executables."
+	rm -f $(OBJS) $(TARGET) Garrett_Introduction.txt
+	@echo "  Cleaned build artifacts."
+
+# ── Help ────────────────────────────────────────────────────────
+.PHONY: help
+help:
+	@echo "  Targets:"
+	@echo "    all    – build $(TARGET)  (default)"
+	@echo "    run    – build and run the test application"
+	@echo "    clean  – remove object files, binary, and generated .txt"
+	@echo "    help   – show this message"
